@@ -1,65 +1,11 @@
 // deno-lint-ignore-file
-
 import * as path from "https://deno.land/std@0.131.0/path/mod.ts";
-
-function js_read_fs(importpath) {
-  let url;
-  if (path.isAbsolute(importpath)) {
-    url = path.toFileUrl(
-      path.resolve(importpath),
-      path.resolve(importpath, Deno.cwd()),
-    );
-  } else {
-    url = importpath;
-  }
-  if (js_is_file(importpath)) {
-    const file = Deno.readTextFileSync(url);
-    return file;
-  } else {
-    return "";
-  }
-}
-
-function js_is_file(importpath) {
-  if (path.isAbsolute(importpath)) {
-    const url = path.toFileUrl(
-      path.resolve(importpath),
-      path.resolve(importpath, Deno.cwd()),
-    );
-    try {
-      const file = Deno.statSync(url);
-      return file.isFile;
-    } catch {
-      return false;
-    }
-  } else {
-    try {
-      const file = Deno.statSync(importpath);
-      return file.isFile;
-    } catch {
-      return false;
-    }
-  }
-}
-
-function js_is_dir(importpath) {
-  if (path.isAbsolute(importpath)) {
-    const url = path.toFileUrl(importpath);
-    try {
-      const file = Deno.statSync(url);
-      return file.isDirectory;
-    } catch {
-      return false;
-    }
-  } else {
-    try {
-      const file = Deno.statSync(importpath);
-      return file.isDirectory;
-    } catch {
-      return false;
-    }
-  }
-}
+import {
+  readFiles,
+  readFile as js_read_fs,
+  isFile as js_is_file,
+  isDirectory as js_is_dir
+} from './fileHandler.js';
 
 const cachedTextDecoder = new TextDecoder("utf-8", {
   ignoreBOM: true,

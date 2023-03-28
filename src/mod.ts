@@ -18,6 +18,7 @@ import {
   SassOptions,
 } from './types/module.types.ts';
 import { FileWritter } from './FileWritter.ts';
+import { readFiles } from './wasm/fileHandler.js';
 
 export const warn = (msg: string) =>
   console.warn(
@@ -111,6 +112,9 @@ class Sass implements SassObject {
       error(`No Output mode has been set during the process.`);
       return false;
     }
+
+    readFiles.clear();
+
     if (typeof format !== 'undefined') this.options.style = format;
     if (typeof this.#current === 'string' || this.#current instanceof Map) {
       if (this.#outmode === 1) {
@@ -156,6 +160,9 @@ class Sass implements SassObject {
       error(`No Output mode has been set during the process.`);
       return false;
     }
+
+    readFiles.clear();
+
     if (typeof format !== 'undefined') this.options.style = format;
     if (this.#outmode === 1) {
       if (this.#mode === 'string') {
@@ -197,6 +204,9 @@ class Sass implements SassObject {
       error(`The output dir string is empty`);
       Deno.exit(1);
     }
+
+    readFiles.clear();
+
     const outDirpath = path.normalize(outputOptions.destDir);
     let outFileExt = '';
     if (exists(outDirpath, 'dir')) {
@@ -344,6 +354,10 @@ class Sass implements SassObject {
     });
     this.#outmode = 2;
     return this;
+  }
+
+  public get_read_files() {
+    return Array.from(readFiles);
   }
 }
 /**
