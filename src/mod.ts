@@ -356,7 +356,7 @@ class Sass implements SassObject {
     return this;
   }
 
-  public getReadFiles() {
+  public get_read_files() {
     return Array.from(readFiles);
   }
 }
